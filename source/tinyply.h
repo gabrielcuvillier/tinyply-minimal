@@ -212,7 +212,7 @@ namespace tinyply
 
 #include <iostream>
 #include <exception>
-#include <typeid>
+#include <typeinfo>
 
 class _PLYTerminateOnException {
 public:
