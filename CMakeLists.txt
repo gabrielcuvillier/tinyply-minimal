@@ -17,17 +17,20 @@ set(CMAKE_DEBUG_POSTFIX "d")
 # Library
 set(SHARED_LIB ${BUILD_SHARED_LIBS} CACHE BOOL "Build as shared library")
 if(${SHARED_LIB})
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    add_library(tinyply SHARED source/tinyply.cpp source/tinyply.h)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  add_library(tinyply SHARED source/tinyply.cpp source/tinyply.h)
 else()
-    add_library(tinyply STATIC source/tinyply.cpp source/tinyply.h)
+  add_library(tinyply STATIC source/tinyply.cpp source/tinyply.h)
 endif()
 
 set(BUILD_TESTS false CACHE BOOL "Build tests")
+set(BUILD_EXAMPLES false CACHE BOOL "Build examples")
 
 # Example Application
-add_executable(example source/example.cpp)
-target_link_libraries(example PRIVATE tinyply)
+if(${BUILD_EXAMPLES})
+  add_executable(example source/example.cpp)
+  target_link_libraries(example PRIVATE tinyply)
+endif()
 
 # Test Application
 if(${BUILD_TESTS})
@@ -52,27 +55,27 @@ set(targets_export_name "${PROJECT_NAME}Targets")
 set(namespace "")
 
 write_basic_package_version_file(
-  "${version_config}"
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY SameMajorVersion
+    "${version_config}"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
 )
 configure_package_config_file(
-  "cmake/Config.cmake.in"
-  "${project_config}"
-  INSTALL_DESTINATION "${config_install_dir}"
+    "cmake/Config.cmake.in"
+    "${project_config}"
+    INSTALL_DESTINATION "${config_install_dir}"
 )
 
 # Install
 install(TARGETS tinyply EXPORT ${targets_export_name}
-        RUNTIME DESTINATION bin
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib)
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib)
 install(FILES source/tinyply.h
-        DESTINATION include)
+    DESTINATION include)
 
 install(FILES "${project_config}" "${version_config}"
-        DESTINATION "${config_install_dir}")
+    DESTINATION "${config_install_dir}")
 
 install(EXPORT "${targets_export_name}"
-        NAMESPACE "${namespace}"
-        DESTINATION "${config_install_dir}")
+    NAMESPACE "${namespace}"
+    DESTINATION "${config_install_dir}")
