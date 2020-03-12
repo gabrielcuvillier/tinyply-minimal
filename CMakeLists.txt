@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
+cmake_policy(VERSION 3.1)
 
 # Compiler requirements
 set(CMAKE_CXX_STANDARD 11)
@@ -14,7 +15,7 @@ include_directories("${CMAKE_SOURCE_DIR}/third-party")
 set(CMAKE_DEBUG_POSTFIX "d")
 
 # Library
-set(SHARED_LIB false CACHE BOOL "Build as shared library")
+set(SHARED_LIB ${BUILD_SHARED_LIBS} CACHE BOOL "Build as shared library")
 if(${SHARED_LIB})
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_library(tinyply SHARED source/tinyply.cpp source/tinyply.h)
@@ -36,7 +37,7 @@ endif()
 
 # pkg-config support
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-if(UNIX)
+if(UNIX OR MINGW)
   configure_file(cmake/tinyply.pc.in ${generated_dir}/tinyply.pc @ONLY)
   install(FILES "${generated_dir}/tinyply.pc" DESTINATION lib/pkgconfig)
 endif()

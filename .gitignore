@@ -42,3 +42,6 @@ DerivedData
 
 assets/large/**
 example.ply
+
+.idea
+/cmake-build-*
