@@ -12,6 +12,15 @@ set(PROJECT_VERSION 2.3)
 include_directories("${CMAKE_SOURCE_DIR}/source")
 include_directories("${CMAKE_SOURCE_DIR}/third-party")
 
+if (EMSCRIPTEN)
+  # Target C++ 17
+  set(CMAKE_CXX_STANDARD 17)
+  # Fully disable exceptions
+  add_compile_options(-fno-exceptions)
+  # Emscripten Strict Mode
+  add_compile_options(-s STRICT=1)
+endif()
+
 set(CMAKE_DEBUG_POSTFIX "d")
 
 # Library
