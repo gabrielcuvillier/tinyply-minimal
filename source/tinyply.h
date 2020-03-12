@@ -208,27 +208,31 @@ namespace tinyply
 
 #ifdef TINYPLY_IMPLEMENTATION
 
-namespace {
-  class _PLYTerminateOnException {
-  public:
-    // Constructors
-    _PLYTerminateOnException(std::exception const & theStdException) {
-      std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what()
-                << "\"" << std::endl;
-    }
-    // Destructor
-    // NB: notice the [[noreturn]] attribute on destructor: it will never return by calling std::terminate()
-    [[noreturn]] ~_PLYTerminateOnException() {
-      std::terminate();
-    }
+#if defined(__EMSCRIPTEN__)
 
-    // Discarded defaults
-    _PLYTerminateOnException(_PLYTerminateOnException const &) = delete;
-    _PLYTerminateOnException(_PLYTerminateOnException &&) = delete;
-    _PLYTerminateOnException & operator = (_PLYTerminateOnException const &) = delete;
-    _PLYTerminateOnException & operator = (_PLYTerminateOnException &&) = delete;
-  };
-}
+#include <iostream>
+#include <exception>
+#include <typeid>
+
+class _PLYTerminateOnException {
+public:
+  // Constructors
+  _PLYTerminateOnException(std::exception const & theStdException) {
+    std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what()
+              << "\"" << std::endl;
+  }
+  // Destructor
+  // NB: notice the [[noreturn]] attribute on destructor: it will never return by calling std::terminate()
+  [[noreturn]] ~_PLYTerminateOnException() {
+    std::terminate();
+  }
+
+  // Discarded defaults
+  _PLYTerminateOnException(_PLYTerminateOnException const &) = delete;
+  _PLYTerminateOnException(_PLYTerminateOnException &&) = delete;
+  _PLYTerminateOnException & operator = (_PLYTerminateOnException const &) = delete;
+  _PLYTerminateOnException & operator = (_PLYTerminateOnException &&) = delete;
+};
 
 // 'throw' is redefined use _TerminateWithStandardFailure functionality
 // NB: notice the assignment operator at the end. This is intended, to "absorb" the thrown failure object;
